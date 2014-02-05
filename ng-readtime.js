@@ -12,38 +12,31 @@ angular.module('ngReadTime', [])
   return {
     restrict: 'A',
     scope: true,
-//    transclude: true,
-//    replace: true,
     template: function(element, attrs) {
-     var tag = element[0].nodeName;
-     return "<span>" + readtime + " minute read</span>";
+      return '<span>' + scope.readtime + ' minute read</span>';
     },
     link: function(scope, element, attrs) {
-      scope.context = attrs.context;
+      scope.context = attrs.readtime-content;
 
-      function contextWords(scope.context) {
-          words = "";
-          var element = scope.context;
-          var length = element.childNodes.length;
-          for (var i = 0; i < length; i++) {
-              var node = element.childNodes[i];
-              if (node.nodeType != 8) {
-                  words += node.nodeType != 1 ? node.nodeValue : contextWords(node);
-              }
+      function grabWords() {
+        words = '';
+        var element = scope.context;
+        var length = element.childNodes.length;
+        for (var i = 0; i < length; i++) {
+          var node = element.childNodes[i];
+          if (node.nodeType !== 8) {
+            words += node.nodeType !== 1 ? node.nodeValue : contextWords(node);
           }
-          return words;
+        }
+        return words.split(/\s+/).length;
       }
-      var words = get_text(document.getElementById('content'));
-      var count = words.split(/\s+/).length;
+      $scope.wordCount = grabWords();
 
-      scope.readtime = function() {
-        
+      //Average adult WPM is 300
+      var findReadtime = function() {
+        scope.readtime = wordCount/300;
       };
-
-      angular.element(document).ready(function() {
-        findReadTime();
-      });
-
+      return findReadTime();
     }
-  }
+  };
 }]);

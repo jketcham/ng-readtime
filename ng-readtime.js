@@ -8,15 +8,13 @@
  */
 
 angular.module('ngReadTime', [])
-.directive('readtime', [function(element) {
+.directive('readtime', [function() {
+  'use strict';
   return {
     restrict: 'A',
     scope: true,
-    template: function(element, attrs) {
-      return '<span>' + scope.readtime + ' minute read</span>';
-    },
     link: function(scope, element, attrs) {
-      scope.context = attrs.readtime-content;
+      scope.context = attrs.readtimeContent;
 
       function grabWords() {
         words = '';
@@ -37,6 +35,9 @@ angular.module('ngReadTime', [])
         scope.readtime = wordCount/300;
       };
       return findReadTime();
+    },
+    template: function(element, attrs) {
+      return '<span>' + scope.readtime + ' minute read</span>';
     }
   };
 }]);
